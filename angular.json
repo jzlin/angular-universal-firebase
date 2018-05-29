@@ -92,6 +92,14 @@
               "**/node_modules/**"
             ]
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "functions/dist/server",
+            "main": "src/main-ssr.ts",
+            "tsConfig": "src/tsconfig.app-ssr.json"
+          }
         }
       }
     },
