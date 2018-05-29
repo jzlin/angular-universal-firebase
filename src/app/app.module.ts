@@ -3,12 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
+const APP_ID = 'angular-universal-firebase';
+
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule.withServerTransition({ appId: APP_ID })
   ],
   providers: [],
   bootstrap: [AppComponent]
