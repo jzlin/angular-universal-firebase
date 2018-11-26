@@ -16,11 +16,20 @@ const index = require('fs')
 
 let app = express();
 
-app.get('**', function(req, res) {
+app.engine('html', function(_, options, callback) {
   renderModuleFactory(AppServerModuleNgFactory, {
-    url: req.path,
+    url: options.req.url,
     document: index
-  }).then(html => res.status(200).send(html));
+  }).then(html => callback(null, html));
+});
+
+app.set('view engine', 'html');
+app.set('views', path.resolve(__dirname, './dist/browser'));
+
+app.get('*.*', express.static(path.resolve(__dirname, './dist/browser')));
+
+app.get('*', (req, res) => {
+  res.render(path.resolve(__dirname, './dist/browser/index.html'), { req });
 });
 
 exports.ssr = functions.https.onRequest(app);
