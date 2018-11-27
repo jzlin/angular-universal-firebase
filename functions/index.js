@@ -6,7 +6,8 @@ const path = require('path');
 const { enableProdMode } = require('@angular/core');
 const { renderModuleFactory } = require('@angular/platform-server');
 
-const { AppServerModuleNgFactory } = require('./dist/server/main');
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/server/main');
+const { provideModuleMap } = require('@nguniversal/module-map-ngfactory-loader');
 
 enableProdMode();
 
@@ -18,9 +19,14 @@ let app = express();
 
 app.engine('html', function(_, options, callback) {
   renderModuleFactory(AppServerModuleNgFactory, {
+    document: index,
     url: options.req.url,
-    document: index
-  }).then(html => callback(null, html));
+    extraProviders: [
+      provideModuleMap(LAZY_MODULE_MAP)
+    ]
+  }).then(function(html) {
+    callback(null, html);
+  });
 });
 
 app.set('view engine', 'html');
